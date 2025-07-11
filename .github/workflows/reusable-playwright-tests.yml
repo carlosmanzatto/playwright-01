@@ -38,48 +38,40 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test --reporter=line,allure-playwright
         
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - name: Upload Allure Results Artifact
+        uses: actions/upload-artifact@v4
+        if: always() # Always upload results, even if tests failed
         with:
           name: allure-results
           path: allure-results/
-        continue-on-error: true
 
-      - name: Download allure
-        uses: actions/download-artifact@v4
-        if: always()
-        with:
-          name: allure-results
-          path: allure-results/
-        continue-on-error: true
-
-      - name: Load Allure history
+      - name: Load Allure history for report generation
         uses: actions/checkout@v4
-        if: always()
+        if: always() # Always attempt to load history
         continue-on-error: true
         with:
-          ref: gh-pages
+          ref: gh-pages # Assuming your Allure history is on the gh-pages branch
           path: gh-pages
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.7
-        if: always()
-        id: allure-report
+        if: always() # Always generate report
+        id: allure-report # ID for accessing outputs like report_url
         with:
           allure_results: allure-results
           gh_pages: gh-pages
-          allure_report: allure-report
-          allure_history: allure-history
-          keep_reports: 20
+          allure_report: allure-report # Output directory for the generated report
+          allure_history: allure-history # Directory for history files (within gh-pages path)
+          keep_reports: 21
 
-      - name: Deploy to GitHub Pages
-        if: always()
+      - name: Deploy Allure Report to GitHub Pages
+        if: always() # Always deploy report
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
-          keep_files: true
+          publish_dir: allure-report # Publish the full generated report directory
+          keep_files: true # Important to keep previous history and reports
 
       - name: Post the link to the report
         if: always()
