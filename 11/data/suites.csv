@@ -1,0 +1,5 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Fri Jul 11 19:08:59 GMT 2025","Fri Jul 11 19:09:04 GMT 2025","4560","webkit","articles.spec.ts","Using Mock","","","Working with APIs with mock",""
+"passed","Fri Jul 11 19:08:55 GMT 2025","Fri Jul 11 19:08:59 GMT 2025","3981","chromium","articles.spec.ts","Using Mock","","","Create an articlbe by API and delete from front end",""
+"passed","Fri Jul 11 19:09:05 GMT 2025","Fri Jul 11 19:09:08 GMT 2025","3298","webkit","articles.spec.ts","Using Mock","","","Create an articlbe by API and delete from front end",""
+"passed","Fri Jul 11 19:08:50 GMT 2025","Fri Jul 11 19:08:53 GMT 2025","2232","chromium","articles.spec.ts","Using Mock","","","Working with APIs with mock",""
