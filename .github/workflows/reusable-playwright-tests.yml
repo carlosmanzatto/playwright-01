@@ -86,43 +86,40 @@ jobs:
       # You need to publish each report into a new, run-number-specific directory.
       # And then manage the 'latest' symlink/redirect.
 
-      - name: Deploy Allure Report to GitHub Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          # Publish the generated report to a new folder named after the run number
-          publish_dir: allure-report
-          destination_dir: ${{ github.run_number }} # This will put the report into e.g., gh-pages/123/
-          keep_files: true # IMPORTANT: This ensures existing folders on gh-pages are not deleted
-          
-      # Create or update a 'latest' symlink/redirect to the newest report
-      # This part might require a custom script or a separate step depending on how you want to handle the "latest" link.
-      # For a simple redirect, you can add an index.html at the root of gh-pages.
-      - name: Create or update latest report redirect
+      - name: Create 'latest' Allure Report Redirect
         if: always()
         run: |
-          echo "<meta http-equiv='refresh' content='0; url=${{ github.run_number }}/index.html'>" > gh-pages-index.html
-          echo "Redirecting to latest Allure Report..." >> gh-pages-index.html
-          ls -R
-          # Copy the history folder from the newly generated report to a persistent location on gh-pages
-          # This is critical for future runs to pick up the history.
-          mkdir -p gh-pages-allure-site/allure-history
-          cp -r allure-report/history gh-pages-allure-site/allure-history/history
+          # Create a new directory to stage the root-level files for gh-pages.
+          # This directory will hold the index.html and the history folder.
+          mkdir -p gh-pages-root-files
+          
+          # Create an index.html file that redirects to the most recent report URL.
+          echo '<meta http-equiv="refresh" content="0; url=${{ github.run_number }}/index.html">' > gh-pages-root-files/index.html
+          echo "Redirecting to latest Allure Report..." >> gh-pages-root-files/index.html
+
+          # Copy the newly generated history to a persistent location for the next run.
+          # The allure_report action creates a history subfolder, which needs to be
+          # copied back to the persistent location on gh-pages.
+          cp -r allure-report/history gh-pages-root-files/allure-history
         
-      - name: Push latest report redirect and updated history to gh-pages
+      - name: Deploy Allure Report for this run
         if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: gh-pages-allure-site # This is the directory containing the index.html and history
-          # You want to publish the "gh-pages-allure-site" as the root of your gh-pages,
-          # which now contains the index.html redirect and the updated history.
-          # Keep files true here will merge this with existing files.
-          keep_files: true
-          # Don't set destination_dir here, as we want this at the root.
+          publish_dir: allure-report
+          destination_dir: ${{ github.run_number }}
+          keep_files: true # Important to not delete the index.html or other folders
+      
+      - name: Deploy Root Files to gh-pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: gh-pages-root-files
+          keep_files: true # Important to merge and not delete the run-numbered folders
 
       - name: Post the link to the report
         if: always()
@@ -132,4 +129,4 @@ jobs:
             context: 'Test report'
             state: 'success'
             sha: ${{ github.sha }}
-            target_url: https://carlosmanzatto.github.io/playwright-01/${{ github.run_number }} # Link to the specific run report
+            target_url: https://carlosmanzatto.github.io/playwright-01/${{ github.run_number }}
