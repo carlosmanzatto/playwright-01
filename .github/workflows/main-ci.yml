@@ -28,7 +28,7 @@ jobs:
       # github.event.inputs.Component will be available if triggered by workflow_dispatch
       # 'All' is a fallback if not triggered by workflow_dispatch (e.g., push/pull_request)
       component: ${{ github.event.inputs.Component || 'All' }}
-    secrets:
+   # secrets:
       # Pass secrets to the reusable workflow
       # GITHUB_TOKEN is automatically available in most contexts
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+   #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
