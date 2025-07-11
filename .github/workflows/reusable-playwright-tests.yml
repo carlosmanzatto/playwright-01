@@ -10,11 +10,11 @@ on:
         required: true
         default: 'All'
         description: 'Specify which component tests to run (All, FrontEnd, BackEnd)'
-    secrets:
+   # secrets:
       # Define secrets that the calling workflow must provide
-      GITHUB_TOKEN:
-        required: true
-        description: 'GitHub token for deploying to GitHub Pages and setting commit status'
+    #  GITHUB_TOKEN:
+     #   required: true
+      #  description: 'GitHub token for deploying to GitHub Pages and setting commit status'
 
 jobs:
   test:
