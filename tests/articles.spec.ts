@@ -18,7 +18,7 @@ test.describe('Using Mock', () => {
     await pm.onLoginPage().formLogin()
   })
 
-  test('Working with APIs with mock', async ({ page }) => {
+  test('Working with APIs with mock', { tag: '@BackEnd'}, async ({ page }) => {
     const pm = new PageManager(page)
 
     await page.waitForTimeout(150)
@@ -38,7 +38,7 @@ test.describe('Using Mock', () => {
     await pm.onHomePage().confirmArticle('MOCK DATA - Test playwright - test QA', 'MOCK DATA - Description about an article - test QA')
   });
 
-  test('Create an articlbe by API and delete from front end', async ({ page, request }) => {
+  test('Create an articlbe by API and delete from front end', { tag: '@BackEnd'}, async ({ page, request }) => {
     const pm = new PageManager(page)
 
     // 1 - Sign in to take the token
@@ -70,7 +70,7 @@ test.describe('Using Mock', () => {
     await pm.onHomePage().confirmArticleDeleted('Teste delete article')
   })
 
-  test('Create by front end and deleted by API', async ({ page, request }) => {
+  test('Create by front end and deleted by API', { tag: '@FrontEnd'}, async ({ page, request }) => {
     const pm = new PageManager(page)
 
     // 1 - create by front
@@ -127,7 +127,7 @@ test.describe('Without mock', () => {
     await page.getByRole('button').click()
   })
 
-  test('Working with APIs without mock', async ({ page }) => {
+  test('Working with APIs without mock', { tag: '@FrontEnd'}, async ({ page }) => {
     await expect(page.locator('.navbar-brand')).toHaveText('conduit');
   });
 

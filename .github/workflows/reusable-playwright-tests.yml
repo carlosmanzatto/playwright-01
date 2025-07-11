@@ -39,7 +39,16 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
+        if: ${{ github.event.inputs.Component == 'All' || github.event.inputs.Component == '' }}
         run: npx playwright test --reporter=line,allure-playwright
+      - name: Run FrontEnd tests
+        if: ${{ github.event.inputs.Component == 'FrontEnd' }}
+        run: npx playwright test --grep @FrontEnd --reporter=line,allure-playwright
+      - name: Run BackEnd tests
+        if: ${{ github.event.inputs.Component == 'BackEnd' }}
+        run: npx playwright test --grep @BackEnd --reporter=line,allure-playwright
+        # this is the old command to run the tests:
+        # run: npx playwright test --reporter=line,allure-playwright
         # Allure results will be in allure-results/
 
       - name: Upload Allure Results Artifact
@@ -79,7 +88,7 @@ jobs:
           allure_results: allure-results
           allure_report: allure-report # This will be the temporary directory for the new report
           allure_history: allure-history # This is the directory where Allure will put the history for the *next* run
-          keep_reports: 21 # Keep reports for 21 days or runs
+          keep_reports: 20 # Keep reports for 20 days or runs
 
       # --- DEPLOYMENT FOR SEQUENTIAL FOLDERS ---
       # This is where the main change needs to happen for sequential folders.
