@@ -88,4 +88,4 @@ jobs:
             context: 'Test report'
             state: 'success'
             sha: ${{ github.sha }}
-            target_url: https://bruno-rcn.github.io/ConduitApiWeb-Aut/${{ github.run_number }}
+            target_url: https://carlosmanzatto.github.io/playwright-01/${{ github.run_number }}
